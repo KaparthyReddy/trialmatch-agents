@@ -1,0 +1,28 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: trialmatch-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_data:/root/.ollama
+
+  app:
+    build: .
+    container_name: trialmatch-app
+    ports:
+      - "8000:8000"
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+      OLLAMA_MODEL: ${OLLAMA_MODEL:-llama3.1}
+      OLLAMA_EMBED_MODEL: ${OLLAMA_EMBED_MODEL:-nomic-embed-text}
+      CHROMA_PERSIST_DIR: /data/chroma
+      CLINICALTRIALS_API_BASE: https://clinicaltrials.gov/api/v2
+    volumes:
+      - chroma_data:/data/chroma
+    depends_on:
+      - ollama
+
+volumes:
+  ollama_data:
+  chroma_data:
