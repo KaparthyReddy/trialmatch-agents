@@ -33,12 +33,12 @@ class OllamaClient:
             return response.json()["response"]
 
     async def embed(self, text: str) -> list[float]:
-        payload = {"model": self.embed_model, "prompt": text}
+        payload = {"model": self.embed_model, "input": text}
 
         async with httpx.AsyncClient(timeout=self.timeout) as client:
-            response = await client.post(f"{self.base_url}/api/embeddings", json=payload)
+            response = await client.post(f"{self.base_url}/api/embed", json=payload)
             response.raise_for_status()
-            return response.json()["embedding"]
+            return response.json()["embeddings"][0]
 
     async def is_reachable(self) -> bool:
         try:

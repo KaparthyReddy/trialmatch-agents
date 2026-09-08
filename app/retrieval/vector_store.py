@@ -18,7 +18,7 @@ class TrialVectorStore:
     def __init__(self, persist_dir: str | None = None, ollama_client: OllamaClient | None = None):
         self.persist_dir = persist_dir or os.getenv("CHROMA_PERSIST_DIR", "./chroma_data")
         self.client = chromadb.PersistentClient(path=self.persist_dir)
-        self.embedding_fn = OllamaEmbeddingFunction(ollama_client or OllamaClient())
+        self.embedding_fn = OllamaEmbeddingFunction()
         self.collection = self.client.get_or_create_collection(
             name="clinical_trials",
             embedding_function=self.embedding_fn,
